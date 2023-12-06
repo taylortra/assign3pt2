@@ -1,0 +1,25 @@
+#cloud-config
+# You will need to edit this file before creating your new servers
+users:
+  - name: web
+    primary_group: web
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDElO41ya/Wnr7NsrWul7t54aBaBQtl1TOJt3+YjpQWj3+ysMJfXbOGjwQlau82Ba8C5AUCE+ucjPgzRYauM3YFSzIQzsh2Pv5Qr9YJoWpzltE+ueSJNyqsGbanO7Xxt+sSGpugdEQt7eP7yEtqEBLPiczrbyjIwQHOPWfW6sN/Hyng2Syu+aXdxqT4dJczvZIVO1ZpAAxkm+gwkO4itBhlyc9cDY33gUxjfFqjgZ/kYdPetsNDUI4Urx7VRHCKFke+Qbb/iHHEiF4P8eb9aoXBSBLvg1BSI+WPXOwi7dWMeHwneoD9AeJ9nkbN2c+0h75HZqK8esPg1hJQZVWO66mtVmnr4hJrbb30rdaJvzOrBP53H9YwuLm8ASNS8Cq1nOwAZJ4pOjMj768nPNttWcfxOWAwNmsWZWhCHs51e9aagJkhjFAKk/5Dpk369uGPtrwbYP+GtQ2QqqBJ2RDbbtDJy6zHbubyk1gLuEZbFQcM0FeXsJAbOcAuPU/vQIkNX+s= taylortra@outlook.com
+
+
+packages:
+  - ripgrep
+  - rsync
+  - nginx
+  - wfw
+
+runcmd:
+  - sed -i 's/^#\(Storage=auto\)/\1/' /etc/systemd/journald.conf
+  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - systemctl restart ssh
+  - systemctl restart systemd-journald
+  - sudo ufw allow http
+  - sudo ufw allow ssh
